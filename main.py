@@ -22,14 +22,29 @@ LINE = (
 OUTPUT_PATH = os.environ.get("ENTRY_OUTPUT", "/output/entry.txt")
 
 
-def validate(line: str) -> None:
-    """Enforce the bounty gate: one line, 1-200 chars, not only whitespace."""
+def check_not_blank(line: str) -> None:
+    """The line must contain at least one non-whitespace character."""
     if not line.strip():
         raise ValueError("line must not be empty or only whitespace")
+
+
+def check_single_line(line: str) -> None:
+    """The line must not contain a newline or carriage return."""
     if "\n" in line or "\r" in line:
         raise ValueError("line must be a single line")
+
+
+def check_within_length(line: str) -> None:
+    """The line must be at most 200 characters."""
     if len(line) > 200:
         raise ValueError(f"line is {len(line)} characters, over the 200 limit")
+
+
+def validate(line: str) -> None:
+    """Enforce the bounty gate: one line, 1-200 chars, not only whitespace."""
+    check_not_blank(line)
+    check_single_line(line)
+    check_within_length(line)
 
 
 def main() -> int:
